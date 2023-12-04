@@ -25,16 +25,23 @@ namespace GetSideOfWorld
             XYZ result = new XYZ(Math.Cos(angle), Math.Sin(angle),0);
             return result;
         }
+        public void GetVector(XYZ vector)
+        {
+            double vx = Math.Round(vector.X, 1);
+            double vy = Math.Round(vector.Y, 1);
+            double vz = Math.Round(vector.Z, 1);
+            TaskDialog.Show("Revit",$"vector {vx}:{vy}:{vz}");
+        }
         public double GetAngle(XYZ tNorth, XYZ vector)
         {
-            double tnX = tNorth.X;
-            double tnY = tNorth.Y;
-            double tnZ = tNorth.Z;
-            double vx = vector.X;
-            double vy = vector.Y;
-            double vz = vector.Z;
+            double tnX = Math.Round(tNorth.X,1);
+            double tnY = Math.Round(tNorth.Y,1);
+            double tnZ = Math.Round(tNorth.Z, 1);
+            double vx = Math.Round(vector.X,1);
+            double vy = Math.Round(vector.Y, 1);
+            double vz = Math.Round(vector.Z,1);
 
-
+            GetVector(vector);
             double angle = 0;
             double result = (tnX*vx+tnY*vy+tnZ*vz)/(Math.Sqrt(Math.Pow(vx,2)+ Math.Pow(vy, 2))* (Math.Sqrt(Math.Pow(tnX, 2) + Math.Pow(tnY, 2))));
             /*if (vx>0 && vy<0)
@@ -54,10 +61,13 @@ namespace GetSideOfWorld
             {
                 angle = Math.Acos(result) * 180 / Math.PI ;
             }*/
+
+            //XYZ mult = new XYZ(tnY * vz - tnZ * vy, tnZ * vx - tnX * vz, tnX * vy - tnY * vx);
             if (vx>=0)
             {
                 if (vy>0)
                 {
+
                     angle = Math.Acos(result) * 180 / Math.PI;
                 }
                 else
@@ -76,6 +86,7 @@ namespace GetSideOfWorld
                     angle = 360- Math.Acos(result) * 180 / Math.PI;
                 }
             }
+            
             return angle;
         }
             static string  GetInfo(List<double> values)
@@ -186,7 +197,7 @@ namespace GetSideOfWorld
             List <XYZ> orientations = new List<XYZ>();
             List<double> angles = new List<double>();
             XYZ TrueNorthVector = GetVector(azimuth);
-            TaskDialog.Show("Revit", $"{TrueNorthVector.X};{TrueNorthVector.Y};{TrueNorthVector.Z}");
+            //TaskDialog.Show("Revit", $"{TrueNorthVector.X};{TrueNorthVector.Y};{TrueNorthVector.Z}");
 
             foreach (Element element in GModelCollector)
             {
@@ -229,8 +240,8 @@ namespace GetSideOfWorld
             GetSide(doc,gmodels, angles);
             foreach (var angle in angles)
             {
-                TaskDialog.Show("Revit", Convert.ToString(angle)) ;
-                
+                TaskDialog.Show("Revit", Convert.ToString(angle));
+
             }
             return Result.Succeeded;
         }
