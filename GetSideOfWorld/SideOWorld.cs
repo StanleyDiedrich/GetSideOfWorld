@@ -37,15 +37,15 @@ namespace GetSideOfWorld
 
             double angle = 0;
             double result = (tnX*vx+tnY*vy+tnZ*vz)/(Math.Sqrt(Math.Pow(vx,2)+ Math.Pow(vy, 2))* (Math.Sqrt(Math.Pow(tnX, 2) + Math.Pow(tnY, 2))));
-            if (vx>0 && vy<0)
+            /*if (vx>0 && vy<0)
             {
                  angle = 360-Math.Acos(result) * 180 / Math.PI;
             }
-            else if (vx<0 && vy<0)
+            else if (vx<0 && vy>0)
             {
-                angle = 360-Math.Acos(result) * 180 / Math.PI ;
+                angle = 180-Math.Acos(result) * 180 / Math.PI ;
             }
-            else if (vy==-1)
+            else if (vx)
             {
                 angle = Math.Acos(result) * 180 / Math.PI +180;
             }
@@ -53,6 +53,28 @@ namespace GetSideOfWorld
             else
             {
                 angle = Math.Acos(result) * 180 / Math.PI ;
+            }*/
+            if (vx>=0)
+            {
+                if (vy>0)
+                {
+                    angle = Math.Acos(result) * 180 / Math.PI;
+                }
+                else
+                {
+                    angle = 360- Math.Acos(result) * 180 / Math.PI;
+                }
+            }
+            else
+            {
+                if (vy >= 0)
+                {
+                    angle = Math.Acos(result) * 180 / Math.PI;
+                }
+                else
+                {
+                    angle = 360- Math.Acos(result) * 180 / Math.PI;
+                }
             }
             return angle;
         }
@@ -99,7 +121,7 @@ namespace GetSideOfWorld
                 {
                     orientation = "В";
                 }
-                else if (337.5 <= a && a < 360)
+                else if (337.5 <= a && a <= 360)
                 {
                     orientation = "В";
                 }
@@ -179,7 +201,7 @@ namespace GetSideOfWorld
 
                 FamilyInstance familyInstance = element as FamilyInstance;
                 XYZ vector = familyInstance.FacingOrientation;
-                if (vector.X==-1 || vector.X==1)
+                /*if (vector.X==-1 || vector.X==1)
                 {
                     XYZ nvector = new XYZ(vector.X, 0, 0);
                     orientations.Add(nvector);
@@ -189,11 +211,11 @@ namespace GetSideOfWorld
                 {
                     XYZ nvector = new XYZ(0, vector.Y, 0);
                     orientations.Add(nvector);
-                }
-                else
-                {
+                }*/
+                /*else
+                {*/
                     orientations.Add(vector);
-                }
+                //}
                 
             }
             foreach (XYZ xYZ in orientations)
