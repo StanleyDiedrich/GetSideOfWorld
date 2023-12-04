@@ -63,7 +63,7 @@ namespace GetSideOfWorld
             }*/
 
             //XYZ mult = new XYZ(tnY * vz - tnZ * vy, tnZ * vx - tnX * vz, tnX * vy - tnY * vx);
-            if (tnY<0)
+            if (tnX>0  && tnY<=0)
             {
                 if (vx >= 0)
                 {
@@ -89,7 +89,7 @@ namespace GetSideOfWorld
                     }
                 }
             }
-            else
+            else if (tnX>0 && tnY>=0)
             {
                 if (vx >= 0)
                 {
@@ -111,6 +111,56 @@ namespace GetSideOfWorld
                     else
                     {
                         angle = 360 - Math.Acos(result) * 180 / Math.PI;
+                    }
+                }
+            }
+            else if (tnX<0 && tnY>0)
+            {
+                if (vx >= 0)
+                {
+                    if (vy >= 0)
+                    {
+                        angle = 360 - Math.Acos(result) * 180 / Math.PI;
+                    }
+                    else
+                    {
+                        angle =  Math.Acos(result) * 180 / Math.PI;
+                    }
+                }
+                else
+                {
+                    if (vy >= 0)
+                    {
+                        angle = Math.Acos(result) * 180 / Math.PI;
+                    }
+                    else
+                    {
+                        angle = 360 - Math.Acos(result) * 180 / Math.PI;
+                    }
+                }
+            }
+            else if (tnX<=0 && tnY<=0)
+            {
+                if (vx >= 0)
+                {
+                    if (vy > 0)
+                    {
+                        angle = 360-Math.Acos(result) * 180 / Math.PI;
+                    }
+                    else
+                    {
+                        angle =  Math.Acos(result) * 180 / Math.PI;
+                    }
+                }
+                else
+                {
+                    if (vy >= 0)
+                    {
+                        angle = 360-Math.Acos(result) * 180 / Math.PI;
+                    }
+                    else
+                    {
+                        angle = Math.Acos(result) * 180 / Math.PI;
                     }
                 }
             }
