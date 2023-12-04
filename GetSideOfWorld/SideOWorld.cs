@@ -34,10 +34,26 @@ namespace GetSideOfWorld
             double vy = vector.Y;
             double vz = vector.Z;
 
-            
 
+            double angle = 0;
             double result = (tnX*vx+tnY*vy+tnZ*vz)/(Math.Sqrt(Math.Pow(vx,2)+ Math.Pow(vy, 2))* (Math.Sqrt(Math.Pow(tnX, 2) + Math.Pow(tnY, 2))));
-            double angle= Math.Acos(result)*180/Math.PI;
+            if (vx>0 && vy<0)
+            {
+                 angle = 360-Math.Acos(result) * 180 / Math.PI;
+            }
+            else if (vx<0 && vy<0)
+            {
+                angle = 360-Math.Acos(result) * 180 / Math.PI ;
+            }
+            else if (vy==-1)
+            {
+                angle = Math.Acos(result) * 180 / Math.PI +180;
+            }
+           
+            else
+            {
+                angle = Math.Acos(result) * 180 / Math.PI ;
+            }
             return angle;
         }
             static string  GetInfo(List<double> values)
@@ -62,43 +78,57 @@ namespace GetSideOfWorld
                 parameter = gmodels[i].LookupParameter("ADSK_Код изделия");
                 string orientation = null;
                 double a = angles[i];
-                if (0<=a && a<22.5)
+                /*
+                                if (a==0)
+                                {
+                                    orientation = "В";
+                                }
+                                else if (a==90)
+                                {
+                                    orientation = "C";
+                                }
+                                else if (a==180)
+                                {
+                                    orientation = "З";
+                                }
+                                else
+                                {
+                                    orientation = "Ю";
+                                }*/
+                if (0 <= a && a <= 22.5)
                 {
                     orientation = "В";
                 }
-                else if (337.5<a && a<360)
+                else if (337.5 <= a && a < 360)
                 {
                     orientation = "В";
                 }
-                else if (22.5<a && a<=67.5)
+                else if (22.5 < a && a <= 67.5)
                 {
                     orientation = "СВ";
                 }
-                else if (a<67.5&& a<=112.5)
+                else if (67.5<a && a <= 112.5)
                 {
                     orientation = "С";
                 }
-                else if (a < 112.5 && a <= 157.5)
+                else if (112.5<a   && a <= 157.5)
                 {
                     orientation = "СЗ";
                 }
-                else if (a < 157.5 && a <= 202.5)
+                else if (157.5<a   && a <= 202.5)
                 {
                     orientation = "З";
                 }
-                else if (a < 202.5 && a <= 247.5)
+                else if (202.5<a   && a <= 247.5)
                 {
                     orientation = "ЮЗ";
                 }
-                else if (a < 202.5 && a <= 247.5)
-                {
-                    orientation = "ЮЗ";
-                }
-                else if (a < 247.5 && a <= 292.5)
+                
+                else if (247.5 < a && a <= 292.5)
                 {
                     orientation = "Ю";
                 }
-                else  
+                else if (292.5<a && a<337.5)
                 {
                     orientation = "ЮВ";
                 }
@@ -149,7 +179,22 @@ namespace GetSideOfWorld
 
                 FamilyInstance familyInstance = element as FamilyInstance;
                 XYZ vector = familyInstance.FacingOrientation;
-                orientations.Add(vector);
+                if (vector.X==-1 || vector.X==1)
+                {
+                    XYZ nvector = new XYZ(vector.X, 0, 0);
+                    orientations.Add(nvector);
+
+                }
+                else if (vector.Y==-1 || vector.Y==1)
+                {
+                    XYZ nvector = new XYZ(0, vector.Y, 0);
+                    orientations.Add(nvector);
+                }
+                else
+                {
+                    orientations.Add(vector);
+                }
+                
             }
             foreach (XYZ xYZ in orientations)
             {
@@ -160,6 +205,11 @@ namespace GetSideOfWorld
             // TaskDialog.Show("Revit", Convert.ToString(gmodels.Count));
 
             GetSide(doc,gmodels, angles);
+            foreach (var angle in angles)
+            {
+                TaskDialog.Show("Revit", Convert.ToString(angle)) ;
+                
+            }
             return Result.Succeeded;
         }
     }
